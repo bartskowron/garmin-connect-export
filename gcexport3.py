@@ -95,14 +95,15 @@ PARSER.add_argument(
     action="store_true",
 )
 PARSER.add_argument(
-    "--download-only",
-    action="store_true",
-    help="download only files, no futher processing such as CSV or JSON outputs",
-)
-PARSER.add_argument(
+    "-s",
     "--skip-duplicates",
     action="store_true",
     help="skip duplicated activities (based on filename)",
+)
+PARSER.add_argument(
+    "--download-only",
+    action="store_true",
+    help="download only files, no futher processing such as CSV or JSON outputs",
 )
 
 ARGS = PARSER.parse_args()

@@ -702,8 +702,9 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
     # print(LIST)
 
     # Process each activity.
-    for a in LIST:
+    for i, a in enumerate(LIST):
         # Display which entry we're working on.
+        print(f"[{i+1}/{len(LIST)}]", end=" ")
         print("Garmin Connect activity: [" + str(a["activityId"]) + "]", end=" ")
         print(a["activityName"])
         # print("\t" + a["uploadDate"]["display"] + ",", end=" ")

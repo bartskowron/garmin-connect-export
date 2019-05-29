@@ -682,6 +682,7 @@ TOTAL_DOWNLOADED = 0
 print("Total to download: " + str(TOTAL_TO_DOWNLOAD))
 
 # This while loop will download data from the server in multiple chunks, if necessary.
+i = 1 # Can't use enumerate() due to loop-in-loop
 while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
     # Maximum chunk size 'limit_maximum' ... 400 return status if over maximum.  So download
     # maximum or whatever remains if less than maximum.
@@ -706,9 +707,9 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
         LIST = [ a for a in LIST if not a["activityName"] in files ]
 
     # Process each activity.
-    for i, a in enumerate(LIST):
+    for a in LIST:
         # Display which entry we're working on.
-        print(f"[{i+1}/{len(LIST)}]", end=" ")
+        print(f"[{i}/{TOTAL_TO_DOWNLOAD}]", end=" ")
         print("Garmin Connect activity: [" + str(a["activityId"]) + "]", end=" ")
         print(a["activityName"])
         # print("\t" + a["uploadDate"]["display"] + ",", end=" ")

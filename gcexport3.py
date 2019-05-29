@@ -99,6 +99,11 @@ PARSER.add_argument(
     action="store_true",
     help="download only files, no futher processing such as CSV or JSON outputs",
 )
+PARSER.add_argument(
+    "--skip-rest",
+    action="store_true",
+    help="skip remaining activities on first found duplicate",
+)
 
 ARGS = PARSER.parse_args()
 
@@ -731,7 +736,10 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
         # Regardless of unzip setting, don't redownload if the ZIP or FIT file exists.
         if ARGS.format == "original" and isfile(fit_filename):
             print("\tFIT data file already exists; skipping...")
-            continue
+            if ARGS.skip_rest:
+                break
+            else:
+                continue
 
         # Download the data file from Garmin Connect. If the download fails (e.g., due to timeout),
         # this script will die, but nothing will have been written to disk about this activity, so

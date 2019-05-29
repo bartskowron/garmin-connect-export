@@ -18,8 +18,8 @@ Activity & event types:
 
 from datetime import datetime, timedelta
 from getpass import getpass
-from os import mkdir, remove, stat
-from os.path import isdir, isfile
+from os import mkdir, remove, stat, listdir
+from os.path import isdir, isfile, splitext
 from subprocess import call
 from sys import argv
 from xml.dom.minidom import parseString
@@ -100,9 +100,9 @@ PARSER.add_argument(
     help="download only files, no futher processing such as CSV or JSON outputs",
 )
 PARSER.add_argument(
-    "--skip-rest",
+    "--skip-duplicates",
     action="store_true",
-    help="skip remaining activities on first found duplicate",
+    help="skip duplicated activities (based on filename)",
 )
 
 ARGS = PARSER.parse_args()
@@ -701,6 +701,10 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
     LIST = json.loads(ACTIVITY_LIST)
     # print(LIST)
 
+    if ARGS.skip_duplicates:
+        files = [ splitext(f)[0] for f in listdir(ARGS.directory) if f.endswith(ARGS.format) or ARGS.format in ('fit', 'zip') ]
+        LIST = [ a for a in LIST if not a["activityName"] in files ]
+
     # Process each activity.
     for i, a in enumerate(LIST):
         # Display which entry we're working on.
@@ -737,10 +741,7 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
         # Regardless of unzip setting, don't redownload if the ZIP or FIT file exists.
         if ARGS.format == "original" and isfile(fit_filename):
             print("\tFIT data file already exists; skipping...")
-            if ARGS.skip_rest:
-                break
-            else:
-                continue
+            continue
 
         # Download the data file from Garmin Connect. If the download fails (e.g., due to timeout),
         # this script will die, but nothing will have been written to disk about this activity, so

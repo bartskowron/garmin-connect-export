@@ -18,7 +18,7 @@ Activity & event types:
 
 from datetime import datetime, timedelta
 from getpass import getpass
-from os import mkdir, remove, stat, listdir
+from os import mkdir, remove, rename, stat, listdir
 from os.path import isdir, isfile, splitext
 from subprocess import call
 from sys import argv
@@ -727,9 +727,13 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
             file_mode = "w"
         elif ARGS.format == "original":
             data_filename = (
-                ARGS.directory + "/" + str(a["activityId"]) + "_activity.zip"
+                ARGS.directory + "/"
+                + datetime.strptime('2019-05-27 16:06:10', '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
+                + "_" + str(a["activityId"]) + "_"
+                + re.sub(r'[^-a-zA-Z0-9_]', '', a["activityName"])[:25].replace(' ', '_')
+                + ".zip"
             )
-            fit_filename = ARGS.directory + "/" + str(a["activityId"]) + ".fit"
+            fit_filename = splitext(data_filename)[0] + ".fit"
             download_url = URL_GC_ORIGINAL_ACTIVITY + str(a["activityId"])
             file_mode = "wb"
         else:
@@ -808,6 +812,7 @@ activity...",
                     z = zipfile.ZipFile(zip_file)
                     for name in z.namelist():
                         z.extract(name, ARGS.directory)
+                        rename(ARGS.directory+"/"+name, fit_filename)
                     zip_file.close()
                 else:
                     print("Skipping 0Kb zip file.")

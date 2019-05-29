@@ -576,7 +576,7 @@ DATA = {
     "showPassword": "true",
 }
 
-print(urllib.parse.urlencode(DATA))
+# print(urllib.parse.urlencode(DATA))
 
 # URLs for various services.
 URL_GC_LOGIN = "https://sso.garmin.com/sso/signin?" + urllib.parse.urlencode(DATA)

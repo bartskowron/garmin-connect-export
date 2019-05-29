@@ -105,12 +105,24 @@ PARSER.add_argument(
     action="store_true",
     help="download only files, no futher processing such as CSV or JSON outputs",
 )
+PARSER.add_argument(
+    "--sync",
+    action="store_true",
+    help="SYNC MODE. Download all unzipped FIT original files and no futher processing. WARNING: This overwrite other options!",
+)
 
 ARGS = PARSER.parse_args()
 
 if ARGS.version:
     print(argv[0] + ", version " + SCRIPT_VERSION)
     exit(0)
+
+if ARGS.sync:
+    ARGS.count = "all"
+    ARGS.format = "original"
+    ARGS.unzip = True
+    ARGS.download_only = True
+    ARGS.skip_duplicates = True
 
 COOKIE_JAR = http.cookiejar.CookieJar()
 OPENER = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(COOKIE_JAR))

@@ -743,7 +743,7 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
         elif ARGS.format == "original":
             data_filename = (
                 ARGS.directory + "/"
-                + datetime.strptime('2019-05-27 16:06:10', '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
+                + datetime.strptime(a["startTimeLocal"], '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
                 + "_" + str(a["activityId"]) + "_"
                 + re.sub(r'[^-a-zA-Z0-9_]', '', a["activityName"])[:25].replace(' ', '_')
                 + ".zip"

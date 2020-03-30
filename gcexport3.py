@@ -725,7 +725,7 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
         # Display which entry we're working on.
         print(f"[{i}/{TOTAL_TO_DOWNLOAD}]", end=" ")
         print("Garmin Connect activity: [" + str(a["activityId"]) + "]", end=" ")
-        print(a["activityName"])
+
         # print("\t" + a["uploadDate"]["display"] + ",", end=" ")
         if ARGS.format == "gpx":
             data_filename = (
@@ -744,10 +744,12 @@ while TOTAL_DOWNLOADED < TOTAL_TO_DOWNLOAD:
             data_filename = (
                 ARGS.directory + "/"
                 + datetime.strptime(a["startTimeLocal"], '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
-                + "_" + str(a["activityId"]) + "_"
-                + re.sub(r'[^-a-zA-Z0-9_]', '', a["activityName"])[:25].replace(' ', '_')
-                + ".zip"
+                + "_" + str(a["activityId"])
             )
+            if a['activityName']:
+                data_filename += "_" \
+                + re.sub(r'[^-a-zA-Z0-9_]', '', a["activityName"])[:25].replace(' ', '_')
+            data_filename  += ".zip"
             fit_filename = splitext(data_filename)[0] + ".fit"
             download_url = URL_GC_ORIGINAL_ACTIVITY + str(a["activityId"])
             file_mode = "wb"
